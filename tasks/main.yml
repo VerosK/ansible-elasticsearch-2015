@@ -1,8 +1,12 @@
 ---
 # Install Elasticsearch
-- include: elasticsearch_deb.yml tags=elasticsearch
+- include: elasticsearch_deb.yml
   when: ansible_distribution in [ 'Debian', 'Ubuntu' ]
 
+- include: elasticsearch_yum.yml
+  when: ansible_distribution in [ 'CentOS' ]
+
+
 # Install Paramedic dashboard
-- include: paramedic.yml tags=elasticsearch
-  when: ansible_distribution in [ 'Debian', 'Ubuntu' ]
+#- include: paramedic.yml tags=elasticsearch
+#  when: ansible_distribution in [ 'Debian', 'Ubuntu' ]

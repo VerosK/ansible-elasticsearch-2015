@@ -7,6 +7,12 @@ elasticsearch:
     dependencies:
       - 'openjdk-6-jre'
       - 'openjdk-6-jdk'
+  yum:
+    package: 'elasticsearch-1.1.0.noarch.rpm'
+    service: 'elasticsearch'
+    dependencies:
+      - 'java-1.7.0-openjdk'
+
   plugin: '/usr/share/elasticsearch/bin/plugin'
   config: '/etc/elasticsearch/elasticsearch.yml'
 

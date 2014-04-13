@@ -1,5 +1,4 @@
 ---
-# Install Elasticsearch dependencies
 - name: "Install Elasticsearch dependencies"
   sudo: yes
   action: ${ansible_pkg_mgr} pkg={{ item }} state=installed update-cache=yes
