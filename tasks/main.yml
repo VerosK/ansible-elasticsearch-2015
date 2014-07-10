@@ -1,12 +1,48 @@
 ---
-# Install Elasticsearch
-- include: elasticsearch_deb.yml
-  when: ansible_distribution in [ 'Debian', 'Ubuntu' ]
+- name: add OS specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
 
-- include: elasticsearch_yum.yml
-  when: ansible_distribution in [ 'CentOS' ]
+- name: Warn if OS is unsupported
+  fail: msg="OS {{ ansible_os_family }} is unsupported"
+  when: not elasticsearch.supported_os
 
+- include: centos.yml
+  when: ansible_os_family == "RedHat"
 
-# Install Paramedic dashboard
-#- include: paramedic.yml tags=elasticsearch
-#  when: ansible_distribution in [ 'Debian', 'Ubuntu' ]
+- include: debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Check elasticsearch installed
+  action: "{{ansible_pkg_mgr}} name={{elasticsearch.service}} state=installed"
+  register: elasticsearch_installed
+  ignore_errors: yes
+
+- name: Fetch Elasticsearch
+  action: get_url url={{ elasticsearch_base_url }}/{{ elasticsearch.package }} dest={{ elasticsearch_tmp }}
+          mode=0440
+  register: elasticsearch_package_file
+  when: elasticsearch_installed|failed
+
+- name: Install Elasticsearch RPM package
+  yum: name={{ elasticsearch_tmp }}/{{ elasticsearch.package }} #
+  when: elasticsearch_installed|failed and ansible_pkg_mgr == 'yum'
+
+- name: Install Elasticsearch DEB package
+  apt: deb={{ elasticsearch_tmp }}/{{ elasticsearch.package }}
+  when: elasticsearch_installed|failed and ansible_pkg_mgr == 'apt'
+
+- name: Change Elasticsearch bind IP
+  lineinfile: "dest='{{ elasticsearch.config }}' state=present regexp='^network.host:'
+              insertafter='#network.host'  line='network.host: {{ elasticsearch_ip }}'"
+  notify: "Restart Elasticsearch"
+
+- name: Change Elasticsearch cluster name
+  lineinfile: "dest='{{ elasticsearch.config }}' state=present regexp='^cluster.name:'
+              insertafter='#cluster.name'  line='cluster.name: {{ elasticsearch_cluster_name }}'"
+  notify: "Restart Elasticsearch"
+
+- name: "Ensure Elasticsearch is running"
+  service: name={{ elasticsearch.service }} state=started enabled=yes
+
+- name: Install plugins
+  include: install_plugins.yml

@@ -1,0 +1,10 @@
+---
+elasticsearch:
+  # confirm OS is supported
+  supported_os: True
+  base_url: 'http://download.elasticsearch.org/elasticsearch/elasticsearch'
+  package: 'elasticsearch-1.2.2.deb'
+  service: 'elasticsearch'
+  dependencies:
+    - 'openjdk-7-jre'
+  config: '/etc/elasticsearch/elasticsearch.yml'

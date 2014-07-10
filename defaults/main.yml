@@ -1,2 +1,9 @@
 ---
-with_paramedic: True
+elasticsearch_tmp: /tmp
+elasticsearch_base_url: 'http://download.elasticsearch.org/elasticsearch/elasticsearch'
+elasticsearch_cluster_name: playground-cluster
+
+elasticsearch_plugins:
+ # list of plugins - name of plugin + file created by plugin
+ - name: 'karmi/elasticsearch-paramedic'
+   index_file: '/usr/share/elasticsearch/plugins/paramedic/_site/index.html'

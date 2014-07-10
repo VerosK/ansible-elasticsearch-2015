@@ -1,5 +1,0 @@
----
-# Install Paramedic dashboard
-- name: "Install Paramedic dashboard"
-  sudo: yes
-  action: command {{ elasticsearch.plugin }} -install {{ paramedic.name }} creates={{ paramedic.index }}

@@ -1,0 +1,5 @@
+---
+- name: Install plugins
+  shell: /usr/share/elasticsearch/bin/plugin install {{item.name}}
+         creates={{item.index_file}}
+  with_items: elasticsearch_plugins

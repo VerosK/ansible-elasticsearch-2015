@@ -1,0 +1,9 @@
+---
+elasticsearch:
+  supported_os: True
+
+  package: 'elasticsearch-1.2.2.noarch.rpm'
+  service: 'elasticsearch'
+  dependencies:
+    - 'java-1.7.0-openjdk'
+  config: '/etc/elasticsearch/elasticsearch.yml'

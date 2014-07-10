@@ -1,0 +1,9 @@
+---
+- name: Update package cache
+  command: apt-get update
+  # cache_valid_time doesn't work ?
+
+- name: Install dependencies DEB packages
+  apt: name={{item}} state=present cache_valid_time=7200
+  with_items: elasticsearch.dependencies
+
